@@ -1,0 +1,24 @@
+Collections -> List, Set, Queue
+List -> Ordered, ArrayList -> Array backed and dynamic, LinkedList -> Doubly Linked List. Supports get by index
+Set -> Unordered, Unique, Hashset -> Uses a Hashtable internally, LinkedHashSet, Treeset. Does not support get
+Queue -> Fifo, LinkedList , Priority Queue (by natural order or comparator), offer (add), poll (get header and remove), peek (get header do not remove)
+Map -> Key, value not child of collection, HashMap, LinkedHashMap, TreeMap, ConcurrentHashMap
+Hashtable -> Predecessor to HashMap, Key Value pairs, Thread safe due to inbuild synchronization, Does not allow null keys or values, resizing similar to hash map, Slower in single threaded apps
+Deque:
+Double Ended Queue, Allows insertions and removals at both ends.
+ArrayDeque: Backed by resizable array
+LinkedList: SLower than ArrayDeque due to pointer overheads
+Allows null elements, not synchronized
+offerFirst(), offsetLast(), pollFirst(), pollLast(), remove, add, get
+offer vs add: adds the element no return, offer add and return addition success status as boolean
+poll vs remove: poll removes the element and returns it, returns null if queue is empty. Remove throws null pointer exception is element is not found i.e. queue is empty.
+get vs peek: peek returns the element and returns null if empty. Get throws a NPE if queue is empty.
+
+TreeMaps and TreeSets are internally implemented as Red Black Trees and have complexity of nlogn for all operations
+Red Black Tree: Self balancing binary search tree, root is black and all leafs are black, red node cannot have red children.
+everyPath from a node to its desendents should have same number of black nodes.
+
+Sorting and Comparison
+Comparable: Natural order, a.compareTo(b)
+Comparator: Custom ordeer compare(a,b)
+

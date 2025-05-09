@@ -1,0 +1,27 @@
+Serialization: Converting object to bytes for storage and transmission
+Deserialization: Converting bytes to object again
+Interface: java.io.Serializable
+serialVersionUUID: version control id, used in deserialization, If the class changes between the serialization and subsequence deserialization, if missing JVM generates
+Serializable vs Externalizable:
+S - Default serialization with an option to customize
+E - Full control via readExternal and writeExternal but need manual handling of fields
+transient: Ignored from serialization, value is not serialized and not restored. Default value is used
+static: Static fields are not serialized as serialization affects objects and static fields are at class level
+Serializable object with non Serializable reference: Upon serial throws NotSerialzable Exception
+Exclude and Include fields without transient and customizations:  Use write Object and read Object methods. Use defaultReadObject() and defaultWriteObject() inside them for default behavior.
+Super class not Serializable: its fields are not serialized and during deserialization its constructor is called for init state.
+Structure change after serializatioN: if serialVersioNID differs or expected fields are missing then throws error. Handle via readObject and stable versionID
+Limitation: Tightly bound to clas structure, insecure, version difficulties
+Alternatives: JSON, XML, Protobuf, Externalization
+Secure: No
+Singleton: override readResolve method and return the SINGLETON instance from it as well. Or use ENUM for signleton class as it is thread safe and does not require read resolve.
+Read Resolve tells the JVM to replace the object with this object after deserialization.
+Java Handles circular references by default:
+
+Externalizable:
+Full control via writeExternal and readExternal. Requries a no arg contructor for deserial process .All fields transient, static, must be handled manually.
+
+Marker interface: No methods, just marks the implementing class which tells the JVM that this class is serializable.
+
+JAVA MEMORY MODEL.
+

@@ -1,0 +1,117 @@
+Thread Interrupt
+thread.interrupted interrupts the thread and set its interrupted status to true.
+JVM throws a Interruption Exception and clears the interrupted flag.
+Thanks why in catch block we say Thread.currentThread().interrupt() so that we can set its interrupt flag to true.
+Doing this tells the downstream process that the thread was interrupted.
+
+Thread States
+New - new Thread()
+Runnable - .start() invoked
+Running - has CPU cycle
+Waiting: .wait() or .join() invoked waiting for other thread
+Blocked: in the synchronized block and waiting for the lock
+Sleeping: .sleep is called. Does not release the lock while sleeping.
+terminated: stopped
+
+Yield
+current thread indicates to scheduler that it is willing to pause and allow other threads to execute no guarentees.
+
+Synchronization
+
+Race Condition: Override each other's work. Read a value increment it and write it back.
+Wait and notify
+
+
+Reentrant Readwrite lock
+It contains two locks a read lock and a write lock.
+Read lock is used on reads and multiple threads can share it simultaneously.
+Write lock can be held by only one thread and if the write lock is held even the read locks are not allowed.
+
+Wait Notify and Notify all
+Methods on object as they work on object monitors on which the lock is taken
+Must be called from synchronized
+wait - the current thread releases lock on the object and suspends
+notify / notify all - notify all the waiting threads. Does not mean they get the lock, they go in runnable state
+Must be called on the same object from inside synchronized
+
+
+Similar to wait and notify ReentrantLocks have Conditions
+Condition is created with lock.newCondition()
+condition.await() is used as wait equivalent
+condition.signal() or signalAll() is used as notify notify all
+Producer consumer can be used by creating two conditions isEmpty() and isFull()
+
+Volatile
+Shared between threads in a non synchronized way. No locks. The value of a volatile variable is shared between threads.
+Consistenty guarentee, race conditions can still arrive, atomicity is not guarenteed
+
+Atomic Variables
+Lock free atomic operations rely on underlying CPU for atomicity
+No locks, no thread contexts,
+Retries, ABA problem
+
+Countdown Latch
+Where one thread waits for multiple other threads to finish. Example: Main is waiting for three workers.
+Latch is initialized by waiting thread and it awaits on it. The workers count down the latch.
+When latch reaches 0 the waiting thread can proceed. No reusability. It is a replacement for multiple joins.
+
+Cyclic Barrier
+Where multiple threads coordinate with each other and wait till last call is finish. Every thread triggers
+barrier.await to wait for the barrier trip. When last worker finishes barrier is tripped and all can proceed.
+There can be a callback action as well when barrier is tripped reusable.
+
+User Thread and Daemon Thread
+If user thread is running JVM will keep running. Daemon thread are background threads and do not block the JVM exit.
+Example:
+
+Thread Pools and Executors
+Prevent thread creation overhead, Control number of threads,
+Execute: Takes one runnable returns void. No exception handling, fire and forget
+Submit: Submits one runnable or callable task to the executor. Returns a future which can be used to check task status, cancel it or task result if the task is callable. Non blocking
+InvokeAny: Submits a list of runnable / callable and blocks till one of them is complete. Returns that reulst of that task and cancels others. For callables. Blocks on first result.
+InvokeAll: Submits a list of runnable / callable tasks and blocks till all of them are complete. Returns a List of Futures one per task, results and statuses can be retrieved from this list. For callables. Blocks on all.
+Blokcing queues are used to hold tasks when they are waiting for threads.
+LinkedBlocking Queue - Unbounded queue, the max pool size setting does not take effect
+ArrayBlocking Queue - Bounded queue with max size, when queue is full new threads are created upto max pool size. Then dropped
+Synchronous Queue - No queue at all either direct to the threads or reject do not store
+
+
+Futures
+Result of async operation  like submit
+is blocked via get()
+Not chainable, no callback on completion.
+
+
+Completable Future
+Run tasks asyncrhonously, Chain then, handle exceptions, combine different async tasks
+runAsync -> Run an sync task  that does ot produce a result. Fire and forget
+supplyAsync -> Run a task that returns result. To get result call .get() or .join() on future.
+executors can be passed on for fututre otherwise the common ForkJoinThreadPool is used
+thenApply -> Takes the result of the first async operation as Compltable Future and returns a transformed completable future
+thenAccept -> Takes the result of the first async operation  and consumes it such as print it. Nothing returned.
+thenRun -> Runs a side effect of future result does not take the completable future as argument and does not return anything
+thenApplyAsync -> thenApply in different executor (ForkJoinPool or given executor)
+thenAcceptAsync -> thenAccept in different executor (ForkJoinPool or given executor)
+thenRunAsync -> thenRun in different executor (ForkJoinPool or given executor)
+
+thenCompose -> Chaining futures when output of first taks is the input of second. Kind of like a flat map.
+thenCombine -> Two parallel futures and output is the combination of both the futures, Takes arguments for the result of both futures.
+These two methods have async variables as well.
+allOf -> Given an array of futures. All of returns a CompletableFuture<Void> it completes when all futures complete. Wait tll all API calls are done.
+anyOf -> Given an array of futures. Any of returns a CompletableFuture<Object> it completes when first future complete. Wait till one is done.
+
+whenComplete -> has params for both exception and result, only logs cannot modify. Used for logging
+handle -> has params for exception and result can produce new result. If exception arises we cna handle it and give a fallback result. Used in Soap Call
+exceptionally -> If not previous handler has handled it then this one is invoked and handles the exception. Can produce a fallback result.
+
+completeOnTimeout -> If future does not complete is given timeframe then this is the default result
+cancel -> Cancel the running future task if its still running otherwise do nothing.
+get -> Block and get the result when future completes. Throw interrupted exception if task fails
+join -> Block and get the result when future completes. Throw completion exception if taks fails.
+
+Non Blocking Queues
+Atomic, no waiting and blocking of elements, compare and set followed, thread safe operation.
+Usage: Producer consumer
+ConcurrentLinkedQueue and Deque
+
+ASK CONCURRENT HASHMAP
