@@ -1,0 +1,50 @@
+ACID
+Atomicity -> All or nothing. Either complete transaction or rollback
+Consistency -> All constriants and rules are applied during tx exeuction. From valid to valid
+Isolation -> Do not interfere with each other, like every tx has sole access
+Durability -> Ones committed stays committed. Commits are permanent
+
+TX Command
+BEGIN / START TRANSACTION - Start a TX
+COMMIT - Commit a TX
+ROLLBACK - Roll back the work done in TX so far
+SAVEPOINT - Create a named point at which you can roll back to
+ROLLBACK to SAVEPOINT -
+RELEASE SAVEPOINT - DELETE SAVEpoint
+
+Isolation Levels:
+Problems
+Dirty Read: Read data written by a transaction that has not committed yet.
+Non-Repeatable Read: If we read data again then it changes beacuse another commited tx has modified it.
+Phantom Read: Similar to repeatable but a new row appears in the data set range due to another uncommitted tx.
+Levels
+Read Uncommitted-> All three problems
+Read Committed -> Prevents Dirty Read
+Repetable Read -> Prevents Non-Repeatable Read and Dirty Read
+Serializable -> Prevents All
+FOR UPDATE in a select query to take lock on the row.
+
+Locking:
+Prevent other tx from reading / writing data while it is being modified.
+ROW LEVEL LOCKS: FOR UPDATE
+TABLE LEVEL LOCKS:
+    Access Share: Acquired by select (allows reads)
+    Row Share: Used by select for share
+    Row Exclusive: Used by update, insert, delete
+    Share: Conflicts with row level changes
+    Exclusive: blocking all operation on table except Select
+    Access Exclusive: Block all access (ALTER TABLE)
+Pessimistic Locking: TX assumes coflict will happen and takes a lock
+Optimistic Locking: TX asummes conflcits are raree and can check for conflicts just before committing or retry on conflict.
+
+DB Performance Optimization
+Explain: The best plan for the query according to engine
+Analzye: Actually run the query and print resilts
+Cost: Start End (cost to start the operation and compolete the operation)
+Rows: number of rows to process / return
+Width: Avg width of row in byte
+Loop: number of times an op was executed
+
+Nested Join: Right Table is scanned for each record in Left table and where join condition matches insert O(n)2
+Merge Join: SORT in must. Sort on the join attribute which groups the join attribute rows in the right table. So start from the first row in left table and go one by one on right table but as soon as join attribute does not match move to second row in the left table and move the pointer in the right table. Sanning of rows happesn ones.
+Hash Join: Take the right table and create a HASH table on it using the join attribute as key and array of rows matching that as value. Now from the left table go through each row get the values from key (join attribute) out of the hash table and join them. GOOD for EQUALITY joins not that good on NON EQUAL
